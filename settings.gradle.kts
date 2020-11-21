@@ -14,6 +14,9 @@ object Modules {
 
     }
 
+    val tools = ":Kotlin.Tool"
+
 }
 
 Modules.Feature.list.forEach { include(it) }
+include(Modules.tools)
