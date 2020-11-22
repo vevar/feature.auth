@@ -37,7 +37,6 @@ object Context : Closeable {
     private var webServer: WebServer? = null
     private var grpcServer: Server? = null
 
-    private var userServiceChannel: ManagedChannel? = null
 
     fun init(di: ConfigurableDI) {
         val config = ConfigFactory.load("common")
@@ -82,13 +81,7 @@ object Context : Closeable {
 
 
             bind<Database>() with singleton { database }
-            bind<Channel>("user-service") with singleton {
-                ManagedChannelBuilder
-                    .forAddress(config.getString("grpc.user-service.host"), config.getInt("grpc.user-service.port"))
-                    .usePlaintext()
-                    .executor(Dispatchers.Default.asExecutor())
-                    .build().also { userServiceChannel = it }
-            }
+
             bind<Auth2TokenGenerator<Int>>() with singleton {
                 object : Auth2TokenGenerator<Int> {
                     override fun createAccessToken(id: Int): String {
@@ -136,6 +129,7 @@ object Context : Closeable {
                     file("web-client.js")
 
                     get {
+                        // Move to ext method
                         call.respondHtml {
                             head {
                                 lang = "ru"
@@ -201,7 +195,6 @@ object Context : Closeable {
 
     @Throws(Exception::class)
     override fun close() {
-        userServiceChannel?.shutdown()?.awaitTermination(5, TimeUnit.SECONDS)
 
         grpcServer?.shutdown()?.awaitTermination(5, TimeUnit.SECONDS)
         webServer?.close()
