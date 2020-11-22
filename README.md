@@ -1,5 +1,5 @@
 # Feature of authorization   
-This feature has been created for reuse logic of authorization(by login & password) and identification (by token) users.
+This feature module has been created for reuse logic of authorization(by login & password) and identification (by token) users.
 You could add your own implementations of data sources like in the sample. 
 
 ## How to run sample
