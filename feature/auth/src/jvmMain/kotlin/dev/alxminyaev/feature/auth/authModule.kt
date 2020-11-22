@@ -1,5 +1,7 @@
 package dev.alxminyaev.feature.auth
 
+import com.alxminyaev.tool.error.exceptions.UnauthorizedException
+import dev.alxminyaev.tool.webServer.api.TemporaryRedirectResponse
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*

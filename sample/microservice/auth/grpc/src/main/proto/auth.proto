@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.alxminyaev.grpc.auth";
+option java_outer_classname = "AuthProto";
+option objc_class_prefix = "Auth";
+
+package auth;
+
+service Auth{
+    rpc ContainAccessToken (ContainAccessTokenRequest) returns (ContainAccessTokenResponse) {}
+}
+
+message ContainAccessTokenRequest{
+    string accessToken = 1;
+}
+
+message ContainAccessTokenResponse{
+    int32 code = 1;
+    EntityId user = 2;
+}
+
+message EntityId {
+    int32 id = 1;
+}

@@ -7,7 +7,6 @@ plugins {
 
 kotlin {
     js {
-        useCommonJs()
         browser()
     }
 
@@ -18,12 +17,6 @@ kotlin {
             }
         }
 
-        val test by compilations.getting {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-
-        }
     }
 
     sourceSets {
@@ -54,7 +47,6 @@ kotlin {
                 implementation(npm("@material/elevation", Versions.Js.Frontend.Npm.material))
 
 
-//                implementation(project(Modules.Tool.Mpp.errorHandling))
             }
 
         }
@@ -69,13 +61,7 @@ kotlin {
                 implementation(Deps.Jvm.kodeinKtorServer)
                 implementation(Deps.Jvm.logback)
 
-//                implementation(project(Modules.Tool.Jvm.webServer))
-            }
-        }
-        jvm().compilations["test"].defaultSourceSet {
-            dependencies {
-                implementation(Deps.Jvm.ktorServerTestHost)
-                implementation(Deps.Jvm.coroutinesTest)
+                implementation(project(Modules.Tool.Jvm.webServer))
             }
         }
     }
@@ -95,7 +81,7 @@ dependencies {
         mppLibrary(Deps.Multiplatform.kotlinSerialization)
         mppLibrary(Deps.Multiplatform.kotlinSerializationRuntime)
 
-//        mppModule(Modules.Tool.Mpp.errorHandling)
+        mppModule(Modules.Tool.Mpp.errorHandling)
 
     }
 }
