@@ -6,7 +6,7 @@ import dev.alxminyaev.feature.auth.model.User
 
 actual interface AccessKeysRDS {
 
-    suspend fun save(accessKeys: AccessKeys): Int
+    suspend fun save(accessKeys: AccessKeys): Long
     suspend fun findByUser(user: User): AccessKeys?
     suspend fun findByRefreshToken(refreshToke: String?): AccessKeys?
 }

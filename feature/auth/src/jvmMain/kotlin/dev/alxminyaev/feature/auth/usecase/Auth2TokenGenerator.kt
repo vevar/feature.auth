@@ -2,6 +2,6 @@ package dev.alxminyaev.feature.auth.usecase
 
 interface Auth2TokenGenerator<P> {
 
-    fun createAccessToken(id: P): String
-    fun createRefreshToken(id: P): String
+    fun createAccessToken(param: P): String
+    fun createRefreshToken(param: P): String
 }

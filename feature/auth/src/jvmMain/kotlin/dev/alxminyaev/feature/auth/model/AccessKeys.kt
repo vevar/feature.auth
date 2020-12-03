@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 actual data class AccessKeys constructor(
-    val id: Int,
+    val id: Long,
     actual val accessToken: String,
     actual val refreshToken: String,
     val user: User

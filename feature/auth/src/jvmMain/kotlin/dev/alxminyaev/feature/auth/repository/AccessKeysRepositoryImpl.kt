@@ -8,7 +8,7 @@ import dev.alxminyaev.feature.auth.model.User
 actual open class AccessKeysRepositoryImpl(
     protected val mainKeysDataSource: AccessKeysDataSource
 ) : AccessKeysRepository() {
-    override suspend fun save(accessKeys: AccessKeys): Int {
+    override suspend fun save(accessKeys: AccessKeys): Long {
         return mainKeysDataSource.save(accessKeys)
     }
 

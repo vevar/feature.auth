@@ -6,15 +6,13 @@ import dev.alxminyaev.feature.auth.model.AccessKeys
 import dev.alxminyaev.feature.auth.model.Account
 import dev.alxminyaev.feature.auth.model.User
 import dev.alxminyaev.feature.auth.repository.AccessKeysRepository
-import dev.alxminyaev.feature.auth.repository.AccessKeysRepositoryImpl
 import dev.alxminyaev.feature.auth.repository.UserRepository
-import dev.alxminyaev.feature.auth.repository.UserRepositoryImpl
 
 // TODO need spilt to single actions
 actual class AuthUseCase(
     private val userRepository: UserRepository,
     private val accessKeysRepositoryImpl: AccessKeysRepository,
-    private val tokenGenerator: Auth2TokenGenerator<Int>
+    private val tokenGenerator: Auth2TokenGenerator<User>
 ) {
 
     suspend fun singIn(login: String, password: String): AccessKeys {
@@ -26,8 +24,8 @@ actual class AuthUseCase(
 
     private suspend fun safeUpdateNewKeys(oldAccessKeys: AccessKeys?, user: User): AccessKeys {
         repeat(10) {
-            val accessToken = tokenGenerator.createAccessToken(user.id)
-            val refreshToken = tokenGenerator.createRefreshToken(user.id)
+            val accessToken = tokenGenerator.createAccessToken(user)
+            val refreshToken = tokenGenerator.createRefreshToken(user)
             val newAccessKeys = AccessKeys(oldAccessKeys?.id ?: 0, accessToken, refreshToken, user)
             try {
                 accessKeysRepositoryImpl.save(newAccessKeys)
@@ -46,9 +44,8 @@ actual class AuthUseCase(
     suspend fun refreshToken(refreshToken: String): AccessKeys {
         val accessKeys = accessKeysRepositoryImpl.findByRefreshToken(refreshToken)
             ?: throw UnauthorizedException("")// TODO think about i18n
-        val userId = accessKeys.user.id
-        val accessToken = tokenGenerator.createAccessToken(userId)
-        val newRefreshToken = tokenGenerator.createRefreshToken(userId)
+        val accessToken = tokenGenerator.createAccessToken(accessKeys.user)
+        val newRefreshToken = tokenGenerator.createRefreshToken(accessKeys.user)
         val newKeys = AccessKeys(
             id = accessKeys.id,
             user = accessKeys.user,
