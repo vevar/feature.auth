@@ -18,7 +18,7 @@ servers:
 
 tags:
   - name: "Login"
-    description: "Вид мероприятия"
+    description: "Авторизация"
     externalDocs:
       description: "Find out more"
       url: "shorturl.at/bjwU5"
