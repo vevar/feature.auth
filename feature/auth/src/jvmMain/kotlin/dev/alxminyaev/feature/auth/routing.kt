@@ -7,40 +7,46 @@ import dev.alxminyaev.feature.auth.model.AccessKeys
 import dev.alxminyaev.feature.auth.model.toApi
 import dev.alxminyaev.feature.auth.usecase.AuthUseCase
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.routing.post
-import io.ktor.routing.route
+import io.ktor.response.*
+import io.ktor.routing.*
 import io.ktor.util.date.GMTDate
 import org.kodein.di.instance
 import org.kodein.di.ktor.di
 
 fun Route.authApi() = route("/api/v1") {
-    post("/login") {
-        val account = call.receive<AccountPostRequest>()
-        val singInUseCase by di().instance<AuthUseCase>()
-        val accessKeys = singInUseCase.singIn(account.login, account.password)
-        val accessExpiresAt = JWT.decode(accessKeys.accessToken).expiresAt.time
-        val refreshExpiresAt = JWT.decode(accessKeys.refreshToken).expiresAt.time
 
-        call.response.cookies.append(
-            name = "access_token",
-            value = "Bearer ${accessKeys.accessToken}",
-            expires = GMTDate(accessExpiresAt),
-            path = "/",
-            httpOnly = true
-        )
-        call.response.cookies.append(
-            name = "refresh_token",
-            value = "Bearer ${accessKeys.refreshToken}",
-            expires = GMTDate(refreshExpiresAt),
-            path = "/",
-            httpOnly = true
-        )
+    route("/login") {
+        post {
+            val account = call.receive<AccountPostRequest>()
+            val singInUseCase by di().instance<AuthUseCase>()
+            val accessKeys = singInUseCase.singIn(account.login, account.password)
+            val accessExpiresAt = JWT.decode(accessKeys.accessToken).expiresAt.time
+            val refreshExpiresAt = JWT.decode(accessKeys.refreshToken).expiresAt.time
 
-        call.respond(accessKeys.toApi())
+            call.response.cookies.append(
+                name = "access_token",
+                value = "Bearer ${accessKeys.accessToken}",
+                expires = GMTDate(accessExpiresAt),
+                path = "/",
+                httpOnly = true,
+//                domain = "localhost:8080"
+            )
+            call.response.cookies.append(
+                name = "refresh_token",
+                value = "Bearer ${accessKeys.refreshToken}",
+                expires = GMTDate(refreshExpiresAt),
+                path = "/",
+                httpOnly = true,
+//                domain = "localhost:8080"
+            )
+
+            call.respond(accessKeys.toApi())
+        }
+
     }
+
     refreshToken()
 }
 
