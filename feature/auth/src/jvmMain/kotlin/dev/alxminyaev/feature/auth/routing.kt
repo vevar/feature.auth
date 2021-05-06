@@ -6,6 +6,7 @@ import dev.alxminyaev.feature.auth.dto.RefreshTokenPostRequest
 import dev.alxminyaev.feature.auth.model.AccessKeys
 import dev.alxminyaev.feature.auth.model.toApi
 import dev.alxminyaev.feature.auth.usecase.AuthUseCase
+import dev.alxminyaev.tool.webServer.api.TemporaryRedirectResponse
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.receive
